@@ -13,7 +13,7 @@ import {
   ImagePicker,
   DatePicker,
   WingBlank,
-  WhiteSpace,
+  WhiteSpace
 } from "antd-mobile";
 
 class Detail extends Component {
@@ -23,8 +23,9 @@ class Detail extends Component {
       showElem: false,
     };
   }
-
-  goto() {
+  
+  // 路由跳转
+  goto() { 
     this.props.history.push("/record");
   }
   gotoSuccess() {
@@ -131,7 +132,7 @@ class Detail extends Component {
                   onImageClick={(index, fs) => console.log(index, fs)}
                   length={1}
                 ></ImagePicker>
-                <span>点击上传维修后的照片</span>
+                {/* <span>点击上传维修后的照片</span> */}
               </div>
             </WingBlank>
           </Flex.Item>
@@ -144,7 +145,7 @@ class Detail extends Component {
                 style={{ backgroundColor: "#1c2d66", color: "#ffffff" }}
                 onClick={() => this.gotoSuccess()}
               >
-                完成绘制
+                故障申报
               </Button>
             </WingBlank>
           </Flex.Item>

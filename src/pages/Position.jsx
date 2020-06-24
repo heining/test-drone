@@ -12,7 +12,7 @@ class Position extends Component {
     Cesium.Ion.defaultAccessToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiMzYxYTk3My01YjI2LTRiZjktOGU5ZC00MDQxZTJjZTRkYmUiLCJpZCI6Mjg0NjQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1OTEyNjM0NTh9.zXiMNn0iN0bPaIqze4z4OC50aiID0B8-2d59_LkV0QU";
     const viewer = new Cesium.Viewer("cesiumContainer", {
-      terrainProvider: Cesium.createWorldTerrain(),
+      // terrainProvider: Cesium.createWorldTerrain(),
       geocoder:false,
       homeButton:false,
       sceneModePicker:false,
@@ -25,6 +25,7 @@ class Position extends Component {
     });
     // 隐藏页面控件
     viewer._cesiumWidget._creditContainer.style.display="none";
+    viewer.scene.globe.show = false;
     const pr = new Cesium.Cesium3DTileset({
       url: "http://cdn.lesuidao.cn/prds3/tileset.json",
     });
@@ -34,7 +35,7 @@ class Position extends Component {
   }
 
   render() {
-    return <div id="cesiumContainer"></div>;  
+    return <div id="cesiumContainer" style={{height: '50%', width: '94%'}}></div>;  
   }
 }
 
