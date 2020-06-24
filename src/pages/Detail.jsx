@@ -13,26 +13,106 @@ import {
   ImagePicker,
   DatePicker,
   WingBlank,
-  WhiteSpace
+  WhiteSpace,
+  Toast,
 } from "antd-mobile";
+
+const url = "";
 
 class Detail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showElem: false,
+      files: [],
+      showImg: false,
     };
   }
-  
+
   // 路由跳转
-  goto() { 
+  goto() {
     this.props.history.push("/record");
   }
   gotoSuccess() {
     this.props.history.push("/success");
   }
 
+  handleChange = (files, type) => {
+    console.log(files, type);
+    this.setState({
+      files,
+    });
+  };
+  /**
+   * @上传图片
+   * fetch请求
+   */
+  handleSubmit = (e) => {
+    const formData = new FormData();
+    // 微信扫码时获取到的id
+    formData.append("pic_id", this.props.id);
+    formData.append("title", "pictest");
+    formData.append("my_file", this.state.files[0].file.name);
+    fetch("/api/v1/upload/picture", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (response.result == "success") {
+          Toast.info("上传成功！");
+          this.setState({
+            showImg: true,
+          });
+          this.state.files.push( this.state.files[0].file)
+          console.log(this.state.files)
+        } else {
+          fetch("/api/v1/update/picture", {
+            method: "POST",
+            body: formData,
+          }).then((response) => {
+            if (response.result == "success") {
+              Toast.info("上传成功！");
+              this.setState({
+                showImg: true,
+              });
+              this.state.files.push( this.state.files[0].file)
+            } else {
+              Toast.info("上传失败，请重试！");
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  componentDidMount() {
+    // 查询图片
+    const urlencoded = new URLSearchParams();
+    urlencoded.append("pic_id", this.props.id);
+    urlencoded.append("title", "pictest");
+    fetch("/api/v1/get/picture/url", {
+      method: "POST",
+      body: urlencoded,
+    })
+      .then((response) => {
+        if (response.result == "success") {
+          url = this.response.url;
+        } else {
+          this.setState({
+            showImg: false,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   render() {
+    const { files } = this.state;
+
     return (
       <div>
         <Flex>
@@ -48,14 +128,14 @@ class Detail extends Component {
               <div style={{ position: "relative" }}>
                 <img
                   src={require("../static/imgs/bg.jpg")}
-                  style={{ width: "100%", borderRadius: 18}}
+                  style={{ width: "100%", borderRadius: 18 }}
                 />
                 <div style={{ position: "absolute", marginTop: -150 }}>
                   <ul
                     style={{
                       listStyle: "none",
                       fontWeight: "bold",
-                      color: "#ffffff"
+                      color: "#ffffff",
                     }}
                   >
                     <li style={{ fontSize: 20 }}>NO.5f-086</li>
@@ -117,26 +197,43 @@ class Detail extends Component {
               </Card>
               <WhiteSpace size="lg" />
               <div style={{ float: "left", marginLeft: 20 }}>
-                <img
-                  src={require("../static/imgs/break.jpg")}
-                  style={{
-                    width: 150,
-                    height: 150,
-                    marginRight: 20,
-                    marginBottom: 20,
-                  }}
-                />
+                {this.state.showImg ? (
+                  <img
+                    src={require(url)}
+                    style={{
+                      width: 150,
+                      height: 150,
+                      marginRight: 20,
+                      marginBottom: 20,
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={require("../static/imgs/break.jpg")}
+                    style={{
+                      width: 150,
+                      height: 150,
+                      marginRight: 20,
+                      marginBottom: 20,
+                    }}
+                  />
+                )}
               </div>
               <div>
                 <ImagePicker
-                  onImageClick={(index, fs) => console.log(index, fs)}
                   length={1}
+                  files={files}
+                  onImageClick={(index, fs) => console.log(index, fs)}
+                  onChange={this.handleChange}
                 ></ImagePicker>
-                {/* <span>点击上传维修后的照片</span> */}
+                <a onClick={this.handleSubmit} style={{ color: "blue" }}>
+                  上传维修后的照片
+                </a>
               </div>
             </WingBlank>
           </Flex.Item>
         </Flex>
+        <br />
 
         <Flex>
           <Flex.Item>

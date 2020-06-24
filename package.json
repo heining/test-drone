@@ -145,5 +145,11 @@
     "presets": [
       "react-app"
     ]
+  },
+  "proxy": {
+    "/api": { 
+      "target": "http://113.31.105.181:8180/",
+      "changeOrigin": true
+    }
   }
 }
