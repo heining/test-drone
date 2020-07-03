@@ -20,14 +20,14 @@ class Position extends Component {
       navigationHelpButton:false,
       animation:false,
       timeline:false,
-      fullscreenButton:false,
+      fullscreenButton:true,
       vrButton:false
     });
     // 隐藏页面控件
     viewer._cesiumWidget._creditContainer.style.display="none";
     viewer.scene.globe.show = false;
     const pr = new Cesium.Cesium3DTileset({
-      url: "http://cdn.lesuidao.cn/prds3/tileset.json",
+      url: "http://cdn.lesuidao.cn/8/tileset.json",
     });
     viewer.scene.primitives.add(pr);
     // 定位
